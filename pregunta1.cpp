@@ -1,4 +1,3 @@
-//g++ pregunta1.cpp -o hash
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -55,6 +54,7 @@ class CacheDiccionario{
 
         if(HT[pos].termino == termino){
             significado = HT[pos].definicion;
+            HT[pos].consultas += 1;
             return 1;
         }else{
             significado = "";
@@ -89,3 +89,4 @@ int main(){
 
     return 0;
 }
+
