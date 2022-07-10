@@ -18,11 +18,16 @@ struct ranura{
 ranura HT[M];
 
 class CacheDiccionario{
-    private:
+private:
         int nElem;
         int Ctotal;
         int Cconocidos;
         int Cdesconocidos;
+        int CleanCount;
+        int HitsCount;
+        int MissCount;
+        int AcCount ;
+
     public:
 
     CacheDiccionario(){
@@ -69,6 +74,7 @@ class CacheDiccionario{
         int pos = inicio = h(termino.c_str());
         for(int i = 1; !HT[pos].termino.empty() && HT[pos].termino != termino; i++){
             pos = (inicio + p(termino, i)) % M;
+            AcCount += 1 ;
         }
         
         if(HT[pos].termino == termino){
@@ -76,17 +82,21 @@ class CacheDiccionario{
             HT[pos].consultas += 1;
             if(HT[pos].definicion.length() > 0){
                 Cconocidos += 1;
+                HitsCount += 1;
             }else{
                 Cdesconocidos -=1;
+                HitsCount += 1 ;
             }
             return 1;
         }else{
             significado = "";
             return 0;
+            MissCount += 1 ;
         }
     };
 
-    void clean(){
+        void clean(){
+        CleanCount += 1 ;
         SortList list;
         for(int i = 0; i<M;i++){
             Index New;
@@ -106,7 +116,6 @@ class CacheDiccionario{
         }
 
         list.clear();
-
     }
 
     void insert(string termino, string significado){
