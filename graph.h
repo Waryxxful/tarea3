@@ -16,7 +16,6 @@ struct data{
     int marca = 0;
 };
 
-
 class Graph{
     private:
         int vertices;
@@ -39,22 +38,28 @@ class Graph{
 };
 
 Graph::Graph(int n){
-    vertices = n; 
+    vertices = n; //se establece el numero de vertices
+
+    // se crea la matriz adyacente de tamaño [n][n]
     matrix = new int*[n]; 
-    for(int i = 0; i<n;i++){ // se crea la matriz adyacente de tamaño [n][n]
+    for(int i = 0; i<n;i++){ 
         matrix[i] = new int[n];
     }
-    info = new data[vertices]; //tabla hash de tamaño n con la informacion de cada vertice
+
+    //tabla hash de tamaño n con la informacion de cada vertice
+    info = new data[vertices]; 
 
 }
 
 Graph::~Graph(){
-    for(int i = 0; i<vertices;i++){ // se crea la matriz adyacente de tamaño [n][n]
+    // se elimina la matriz adyacente de tamaño [n][n]
+    for(int i = 0; i<vertices;i++){ 
         delete[] matrix[i];
     }
+
+    //se elimina ultimo dato de la matriz y el arreglo info
     delete[] matrix;
     delete[] info;
-    
 }
 
 void Graph::setVertices(int num, int id){
@@ -62,9 +67,7 @@ void Graph::setVertices(int num, int id){
     info[num].numVertice = num; //guarda num del vertice correspondiente
 }
 
-void Graph::setVertices(int num, string name){
-    info[num].nombre = name; // guarda el nombre del vertice
-}
+void Graph::setVertices(int num, string name){ info[num].nombre = name;} //guarda nombre del vertice
 
 void Graph::setEdges(int i, int j, int weight){
     matrix[i][j] = weight; // agrega el peso 
@@ -82,17 +85,19 @@ int Graph::weight(tVertice v1, tVertice v2){ return matrix[v1][v2]; }
 void Graph::floydsWarshalls(int** matriz){
     int size = nVertex();
     int i,j,k;
+
     for(i = 0; i < size; i++){
         for(j = 0; j<size; j++){
             if(matrix[i][j]!=0){ //si existe un arco
                 matriz[i][j] = matrix[i][j];
-            }else if(i == j){
+            }else if(i == j){ 
                 matriz[i][j] = 0;
             }else{
-                matriz[i][j] = INFINITO;
+                matriz[i][j] = INFINITO; //vecino inalcanzable al inicio vale infinito
             }
         }
     }
+
     for(k = 0; k < size; k++){
         for(i = 0; i < size; i++){
             for(j=0 ; j < size; j++){
@@ -100,13 +105,6 @@ void Graph::floydsWarshalls(int** matriz){
                     matriz[i][j] = (matriz[i][k] + matriz[k][j]);
                 }
             }
-        }
-    }
-
-    for(i = 0; i < size; i++){ //como es simetrica, si una fila queda con valores infinitos se soluciona 
-        for(j = 0; j<size; j++){
-            matriz[i][j] = matriz[i][j] < matriz[j][i] ? matriz[i][j] : matriz[j][i];
-            matriz[j][i] = matriz[i][j] < matriz[j][i] ? matriz[i][j] : matriz[j][i];
         }
     }
 }   
